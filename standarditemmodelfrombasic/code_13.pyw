@@ -104,18 +104,12 @@ class StandardItemModel(QStandardItemModel):
         out = QDataStream(qb, QIODevice.WriteOnly)
 
         for index in indexes:
-            item = self.item(index.row(), index.column())
-            if item is None:
-                out.writeBool(False)
-                continue
-            else:
-                out.writeBool(True)
-                
+            item = self.item(index.row(), index.column())                
             out << item
 
         mimeData = QMimeData()
         mimeData.setData(
-            self.mimeTypes()[1], qb
+            self.mimeTypes()[0], qb
             )
         return mimeData
 
@@ -161,14 +155,14 @@ class StandardItemModel(QStandardItemModel):
             self.appendRow(item)
             return False
             
-        data = data.data(self.mimeTypes()[0])
-        
+        data = data.data(self.mimeTypes()[0])       
 
         out = QDataStream(data, QIODevice.ReadOnly)
         
         while not out.atEnd():
             item = QStandardItem()
             out >> item
+            print(item)
  
         if self.rowCount() == 0:
             self.appendRow(item)
@@ -187,7 +181,7 @@ class StandardItemModel(QStandardItemModel):
         elif G_rowIsAboutToBeAdded:
 
             self.setRowCount(
-                self.rowCount() + G_rowIsAboutToBeAdded
+                self.rowCount() + G_rowIsAboutToBeAddedCount
                 )
 
             self.setItem(
